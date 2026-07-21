@@ -145,6 +145,13 @@ button { font-family: inherit; }
 .search input {
   background: none; border: none; outline: none; color: var(--text);
   font-family: var(--font-body); font-size: 0.9rem; width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.search input::-webkit-search-cancel-button,
+.search input::-webkit-search-decoration {
+  -webkit-appearance: none;
+  display: none;
 }
 .search input::placeholder { color: var(--text-dim); }
 
