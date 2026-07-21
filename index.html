@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Release Dock — منصة استضافة وتنزيل التطبيقات</title>
+<meta name="description" content="متجر تطبيقات مستقل مع إحصائيات تنزيل حقيقية." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar__inner">
+      <a class="brand" href="/">
+        <span class="brand__mark" aria-hidden="true">
+          <span class="brand__dot"></span>
+        </span>
+        <span class="brand__text">Release<span class="brand__accent">Dock</span></span>
+      </a>
+      <div class="topbar__meta">
+        <span class="status-pill"><span class="status-dot"></span>القاعدة متصلة — عدّادات حقيقية</span>
+        <a href="/admin" class="topbar__admin-link">لوحة التحكم</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero__inner">
+        <p class="hero__eyebrow">manifest.json</p>
+        <h1 class="hero__title">كل إصدار موثّق. كل تنزيل حقيقي.</h1>
+        <p class="hero__lede">
+          Release Dock مستودع تطبيقات مستقل: كل بطاقة أدناه هي سجلّ إصدار فعلي مأخوذ من قاعدة البيانات
+          — بلا أرقام تجميلية، وبلا مبالغة.
+        </p>
+        <div class="hero__stats" id="hero-stats" aria-live="polite">
+          <div class="hero__stat">
+            <span class="hero__stat-value" id="stat-apps">—</span>
+            <span class="hero__stat-label">تطبيق منشور</span>
+          </div>
+          <div class="hero__stat">
+            <span class="hero__stat-value" id="stat-downloads">—</span>
+            <span class="hero__stat-label">تنزيل مسجَّل</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="catalog" id="catalog">
+      <div class="catalog__header">
+        <h2>الإصدارات المتاحة</h2>
+        <label class="search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2"/><path d="m20 20-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <input type="search" id="search-input" placeholder="ابحث عن تطبيق…" />
+        </label>
+      </div>
+
+      <div id="catalog-grid" class="catalog__grid" aria-live="polite">
+        <!-- app cards injected here -->
+      </div>
+
+      <div id="empty-state" class="empty-state" hidden>
+        <p>لا توجد تطبيقات منشورة بعد.</p>
+        <p class="empty-state__sub">أضِف أول إصدار من لوحة التحكم.</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal-overlay" id="app-modal" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <button class="modal__close" id="modal-close" aria-label="إغلاق">✕</button>
+      <div class="modal__body" id="modal-body"><!-- filled by JS --></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>Release Dock — يعمل على Railway · بيانات حقيقية 100% من قاعدة البيانات.</p>
+  </footer>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
