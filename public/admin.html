@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>لوحة التحكم — Release Dock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css" />
+<link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <!-- Login screen -->
+  <section id="login-screen" class="login-screen">
+    <form id="login-form" class="login-card">
+      <p class="hero__eyebrow">admin.auth</p>
+      <h1 class="login-title">دخول لوحة التحكم</h1>
+      <label class="field">
+        <span>اسم المستخدم</span>
+        <input type="text" name="username" autocomplete="username" required />
+      </label>
+      <label class="field">
+        <span>كلمة المرور</span>
+        <input type="password" name="password" autocomplete="current-password" required />
+      </label>
+      <button type="submit" class="btn-download">تسجيل الدخول</button>
+      <p class="login-error" id="login-error" hidden></p>
+    </form>
+  </section>
+
+  <!-- Dashboard -->
+  <div id="dashboard" class="dashboard" hidden>
+    <header class="topbar">
+      <div class="topbar__inner">
+        <a class="brand" href="/">
+          <span class="brand__mark"><span class="brand__dot"></span></span>
+          <span class="brand__text">Release<span class="brand__accent">Dock</span> <small style="color:var(--text-dim);font-size:0.6em;">Admin</small></span>
+        </a>
+        <div class="topbar__meta">
+          <span class="status-pill" id="admin-username"></span>
+          <button class="topbar__admin-link" id="logout-btn" style="background:none;border:1px solid var(--border);cursor:pointer;">تسجيل الخروج</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="dash-main">
+      <section class="dash-stats" id="dash-stats"></section>
+
+      <section class="dash-panel">
+        <div class="dash-panel__header">
+          <h2>التطبيقات</h2>
+          <button class="btn-primary" id="new-app-btn">+ رفع تطبيق جديد</button>
+        </div>
+        <div class="table-wrap">
+          <table class="apps-table" id="apps-table">
+            <thead>
+              <tr>
+                <th></th><th>الاسم</th><th>الإصدار</th><th>الحجم</th><th>الحالة</th><th>تنزيلات</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="apps-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- App edit/create modal -->
+  <div class="modal-overlay" id="app-form-modal" hidden>
+    <div class="modal" style="max-width:560px;">
+      <button class="modal__close" id="form-modal-close">✕</button>
+      <h2 id="form-title" class="modal-title" style="margin-bottom:20px;">تطبيق جديد</h2>
+      <form id="app-form" class="app-form">
+        <input type="hidden" name="id" />
+        <label class="field">
+          <span>اسم التطبيق</span>
+          <input type="text" name="name" required />
+        </label>
+        <label class="field">
+          <span>الوصف</span>
+          <textarea name="description" rows="3"></textarea>
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span>رقم الإصدار</span>
+            <input type="text" name="version" placeholder="1.0.0" />
+          </label>
+          <label class="field field-check">
+            <input type="checkbox" name="published" />
+            <span>منشور للمستخدمين</span>
+          </label>
+        </div>
+        <label class="field">
+          <span>سجل التحديثات (Changelog)</span>
+          <textarea name="changelog" rows="3" placeholder="- إصلاح كذا&#10;- تحسين كذا"></textarea>
+        </label>
+        <label class="field">
+          <span>أيقونة التطبيق</span>
+          <input type="file" name="icon" accept="image/*" />
+        </label>
+        <label class="field">
+          <span>صور واجهة التطبيق (حتى 8 صور)</span>
+          <input type="file" name="screenshots" accept="image/*" multiple />
+        </label>
+        <label class="field">
+          <span>ملف التطبيق (apk / exe / zip / dmg …)</span>
+          <input type="file" name="file" />
+        </label>
+        <p class="form-error" id="form-error" hidden></p>
+        <button type="submit" class="btn-download" id="form-submit">حفظ التطبيق</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>
