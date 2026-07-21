@@ -1,4 +1,4 @@
-const { createClient } = require('@supabase/supabase-js');
+const { StorageClient } = require('@supabase/storage-js');
 const { v4: uuidv4 } = require('uuid');
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
@@ -9,10 +9,11 @@ if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
   console.error('خطأ: SUPABASE_URL أو SUPABASE_SERVICE_ROLE_KEY غير معرّفين في متغيرات البيئة.');
 }
 
-// service_role key bypasses Row Level Security — this client only ever runs
-// on the server, never sent to the browser.
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-  auth: { persistSession: false },
+// storage-js talks to Supabase's Storage REST API directly — no Realtime/Auth
+// modules pulled in, so it doesn't need a native WebSocket implementation.
+const storageClient = new StorageClient(`${SUPABASE_URL}/storage/v1`, {
+  apikey: SUPABASE_SERVICE_ROLE_KEY,
+  Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
 });
 
 /**
@@ -25,13 +26,13 @@ async function uploadBuffer(buffer, { folder, filename, contentType }) {
   const ext = filename ? filename.split('.').pop() : 'bin';
   const path = `${folder}/${uuidv4()}.${ext}`;
 
-  const { error } = await supabase.storage.from(BUCKET).upload(path, buffer, {
+  const { error } = await storageClient.from(BUCKET).upload(path, buffer, {
     contentType: contentType || 'application/octet-stream',
     upsert: false,
   });
   if (error) throw new Error(`فشل رفع الملف إلى Supabase Storage: ${error.message}`);
 
-  const { data } = supabase.storage.from(BUCKET).getPublicUrl(path);
+  const { data } = storageClient.from(BUCKET).getPublicUrl(path);
   return { url: data.publicUrl, publicId: path };
 }
 
@@ -39,7 +40,7 @@ async function uploadBuffer(buffer, { folder, filename, contentType }) {
 async function deleteByPublicId(publicId) {
   if (!publicId) return;
   try {
-    const { error } = await supabase.storage.from(BUCKET).remove([publicId]);
+    const { error } = await storageClient.from(BUCKET).remove([publicId]);
     if (error) console.error('تعذر حذف الملف من Supabase Storage:', error.message);
   } catch (err) {
     console.error('تعذر حذف الملف من Supabase Storage:', err.message);
