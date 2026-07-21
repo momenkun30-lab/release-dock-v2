@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>إعداد أول مرة — Release Dock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/css/styles.css" />
+<link rel="stylesheet" href="/css/admin.css" />
+</head>
+<body class="admin-body">
+  <section class="login-screen">
+    <div class="login-card" id="setup-wrap">
+      <p class="hero__eyebrow">setup.once</p>
+      <h1 class="login-title">إنشاء حساب المدير الأول</h1>
+
+      <div id="loading-state" style="color:var(--text-muted); font-size:0.9rem;">جارٍ التحقق…</div>
+
+      <form id="setup-form" class="setup-form" hidden>
+        <label class="field">
+          <span>اسم المستخدم</span>
+          <input type="text" name="username" autocomplete="username" required minlength="3" />
+        </label>
+        <label class="field">
+          <span>كلمة المرور (8 أحرف على الأقل)</span>
+          <input type="password" name="password" autocomplete="new-password" required minlength="8" />
+        </label>
+        <button type="submit" class="btn-download">إنشاء الحساب</button>
+        <p class="form-error" id="setup-error" hidden></p>
+      </form>
+
+      <div id="already-done" hidden style="color:var(--text-muted); font-size:0.9rem;">
+        تم إعداد حساب المدير مسبقًا لهذا الموقع، لذلك أُغلقت هذه الصفحة لأسباب أمنية.
+        <br /><br />
+        <a href="/admin" style="color:var(--accent)">اذهب لصفحة تسجيل الدخول →</a>
+      </div>
+
+      <div id="success-state" hidden style="color:var(--accent); font-size:0.95rem;">
+        ✅ تم إنشاء الحساب بنجاح!
+        <br /><br />
+        <a href="/admin" class="btn-download" style="display:inline-block; text-decoration:none;">الذهاب لتسجيل الدخول</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const loadingState = document.getElementById('loading-state');
+    const form = document.getElementById('setup-form');
+    const alreadyDone = document.getElementById('already-done');
+    const successState = document.getElementById('success-state');
+    const errorBox = document.getElementById('setup-error');
+
+    async function checkStatus() {
+      try {
+        const res = await fetch('/api/setup/status');
+        const data = await res.json();
+        loadingState.hidden = true;
+        if (data.needsSetup) {
+          form.hidden = false;
+        } else {
+          alreadyDone.hidden = false;
+        }
+      } catch {
+        loadingState.textContent = 'تعذر الاتصال بالخادم، أعد تحميل الصفحة.';
+      }
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errorBox.hidden = true;
+      const fd = new FormData(form);
+      try {
+        const res = await fetch('/api/setup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: fd.get('username'), password: fd.get('password') }),
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'حدث خطأ');
+        form.hidden = true;
+        successState.hidden = false;
+      } catch (err) {
+        errorBox.textContent = err.message;
+        errorBox.hidden = false;
+      }
+    });
+
+    checkStatus();
+  </script>
+</body>
+</html>
